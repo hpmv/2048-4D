@@ -1,43 +1,108 @@
-function HTMLActuator() {
+function HTMLActuator(size, grid) {
+  this.size = size.copy();
+  this.grid = grid;
+  this.gridContainer = document.querySelector(".grid-container");
   this.tileContainer    = document.querySelector(".tile-container");
   this.scoreContainer   = document.querySelector(".score-container");
   this.bestContainer    = document.querySelector(".best-container");
-  this.messageContainer = document.querySelector(".game-message");
+  this.messageContainer = document.querySelector(".game-message-wrapper");
   this.sharingContainer = document.querySelector(".score-sharing");
 
   this.score = 0;
+  this.layoutParams = {
+    maxWidth: 1000,
+    maxHeight: 700,
+    tileSize: 100,
+    baseMargin: 15,
+    incrementMargin: 6
+  };
+  this.layout = this.calculateGridPositions(this.layoutParams);
 }
 
-HTMLActuator.prototype.actuate = function (grid, metadata) {
-  var self = this;
-
+HTMLActuator.prototype.actuate = function (metadata) {
   window.requestAnimationFrame(function () {
-    self.clearContainer(self.tileContainer);
-
-    grid.cells.forEach(function (column) {
-      column.forEach(function (beam) {
-        beam.forEach(function (bar) {
-          bar.forEach(function (cell) {
-            if (cell) {
-              self.addTile(cell);
-            }
-          });
-        });
-      });
+    this.clearContainer(this.gridContainer);
+    this.clearContainer(this.tileContainer);
+    $(this.gridContainer).css({
+      width: this.layout.gridWidth + 'px',
+      height: this.layout.gridHeight + 'px'
+    });
+    $('.game-container').css({
+      width: this.layout.gridWidth + 30 + 'px',
+      height: this.layout.gridHeight + 30 + 'px'
+    });
+    $('.game-message-wrapper').css({
+      width: this.layout.gridWidth + 30 + 'px',
+      height: this.layout.gridHeight + 30 + 'px'
     });
 
-    self.updateScore(metadata.score);
-    self.updateBestScore(metadata.bestScore);
+    this.grid.eachCell(function (cell, tile) {
+      if (tile) {
+        this.addTile(tile);
+      }
+    }.bind(this));
 
-    if (metadata.terminated) {
-      if (metadata.over) {
-        self.message(false); // You lose
-      } else if (metadata.won) {
-        self.message(true); // You win!
+    var gridRows = [];
+    var nrow = 1;
+    var ncol = 1;
+    for (var dim = 0; dim < this.size.length; dim++) {
+      if (dim % 2 == 0) {
+        ncol *= this.size[dim];
+      } else {
+        nrow *= this.size[dim];
       }
     }
 
-  });
+    for (var i = 0; i < this.grid.totalCells; i++) {
+      var position = this.grid.intToPosition(i);
+      var row = 0;
+      var col = 0;
+      var dimX = 0;
+      var dimY = 0;
+      for (var dim = position.length - 1; dim >= 0; dim--) {
+        if (dim % 2 == 0) {
+          col *= this.size[dim];
+          col += position[dim];
+        } else {
+          row *= this.size[dim];
+          row += position[dim];
+        }
+      }
+      for (var dim = 0; dim < position.length; dim++) {
+        if (dim % 2 == 0) {
+          if (position[dim] == this.size[dim] - 1 && dim / 2 == dimX) dimX++;
+        } else {
+          if (position[dim] == this.size[dim] - 1 && (dim - 1) / 2 == dimY) dimY++;
+        }
+      }
+      if (col == 0) {
+        var gridRow = $("<div>").addClass('grid-row').css({
+          'margin-bottom': (row == nrow - 1 ? 0 : (this.layout.baseMargin + dimY * this.layout.incrementMargin)) + 'px'
+        });
+        gridRows.push(gridRow);
+        $(this.gridContainer).append(gridRow);
+      }
+      gridRows[row].append(
+          $("<div>").addClass('grid-cell').css({
+            width: this.layout.tileSize,
+            height: this.layout.tileSize,
+            'margin-right': (col == ncol - 1 ? 0 : (this.layout.baseMargin + dimX * this.layout.incrementMargin)) + 'px'
+          })
+      );
+    }
+
+    this.updateScore(metadata.score);
+    this.updateBestScore(metadata.bestScore);
+
+    if (metadata.terminated) {
+      if (metadata.over) {
+        this.message(false); // You lose
+      } else if (metadata.won) {
+        this.message(true); // You win!
+      }
+    }
+
+  }.bind(this));
 };
 
 // Continues the game (both restart and keep playing)
@@ -55,29 +120,47 @@ HTMLActuator.prototype.clearContainer = function (container) {
   }
 };
 
+HTMLActuator.prototype.applyTransform = function (tile, position) {
+  var coordinates = this.tileCoordinates(position);
+  var str = 'translate(' + coordinates[0] + 'px,' + coordinates[1] + 'px)';
+  $(tile).css({
+    width: this.layout.tileSize,
+    height: this.layout.tileSize,
+    'font-size': 55 * this.layout.scaling + 'px',
+    'transform': str,
+    '-moz-transform': str,
+    '-webkit-transform': str
+  });
+//  $(tile).find('.tile-inner').css({
+//    'padding-top': 10 * this.layout.scaling + 'px'
+//  })
+}
+
 HTMLActuator.prototype.addTile = function (tile) {
   var self = this;
 
   var wrapper   = document.createElement("div");
   var inner     = document.createElement("div");
-  var position  = tile.previousPosition || { x: tile.x, y: tile.y, z: tile.z, w: tile.w };
-  var positionClass = this.positionClass(position);
+  var position = tile.previousPosition || tile.position.copy();
 
   // We can't use classlist because it somehow glitches when replacing classes
-  var classes = ["tile", "tile-" + tile.value, positionClass];
+  var classes = ["tile", "tile-" + tile.value];
 
   if (tile.value > 2048) classes.push("tile-super");
 
   this.applyClasses(wrapper, classes);
+  this.applyTransform(wrapper, position);
 
   inner.classList.add("tile-inner");
   inner.textContent = tile.value;
 
+
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
     window.requestAnimationFrame(function () {
-      classes[2] = self.positionClass({ x: tile.x, y: tile.y, z: tile.z, w: tile.w });
-      self.applyClasses(wrapper, classes); // Update the position
+      //classes[2] = self.positionClass(tile.position.copy());
+      //self.applyClasses(wrapper, classes); // Update the position
+      self.applyTransform(wrapper, tile.position.copy());
     });
   } else if (tile.mergedFrom) {
     classes.push("tile-merged");
@@ -103,13 +186,61 @@ HTMLActuator.prototype.applyClasses = function (element, classes) {
   element.setAttribute("class", classes.join(" "));
 };
 
-HTMLActuator.prototype.normalizePosition = function (position) {
-  return { x: position.x + 1, y: position.y + 1, z: position.z + 1, w: position.w + 1 };
+HTMLActuator.prototype.tileCoordinates = function (position) {
+  return this.layout.positions[this.grid.positionToInt(position)];
 };
 
-HTMLActuator.prototype.positionClass = function (position) {
-  position = this.normalizePosition(position);
-  return "tile-position-" + position.x + "-" + position.y + "-" + position.z + "-" + position.w;
+HTMLActuator.prototype.calculateGridPositions = function (layoutParams) {
+  var tileSize = layoutParams.tileSize;
+  var baseMargin = layoutParams.baseMargin;
+  var incrementMargin = layoutParams.incrementMargin;
+  var horizontal = tileSize;
+  var vertical = tileSize;
+  var horizontalSizes = [];
+  var verticalSizes = [];
+  for (var i = 0; i < this.size.length; i++) {
+    if (i % 2 == 0) {
+      horizontalSizes.push(horizontal);
+      horizontal *= this.size[i];
+      horizontal += (this.size[i] - 1) * (baseMargin + i / 2 * incrementMargin);
+    } else {
+      verticalSizes.push(vertical);
+      vertical *= this.size[i];
+      vertical += (this.size[i] - 1) * (baseMargin + (i - 1) / 2 * incrementMargin);
+    }
+  }
+  var scaling = 1;
+  if (scaling * horizontal > layoutParams.maxWidth) {
+    scaling = layoutParams.maxWidth / horizontal;
+  }
+  if (scaling * vertical > layoutParams.maxHeight) {
+    scaling = layoutParams.maxHeight / vertical;
+  }
+  var positions = [];
+  for (var i = 0; i < this.grid.totalCells; i++) {
+    var position = this.grid.intToPosition(i);
+    var x = 0;
+    var y = 0;
+    for (var dim = 0; dim < position.length; dim++) {
+      if (dim % 2 == 0) {
+        x += (horizontalSizes[dim / 2] + baseMargin + dim / 2 * incrementMargin) * position[dim];
+      } else {
+        y += (verticalSizes[(dim - 1) / 2] + baseMargin + (dim - 1) / 2 * incrementMargin) * position[dim];
+      }
+    }
+    x *= scaling;
+    y *= scaling;
+    positions.push([x, y]);
+  }
+  return {
+    scaling: scaling,
+    gridWidth: horizontal * scaling,
+    gridHeight: vertical * scaling,
+    tileSize: tileSize * scaling,
+    positions: positions,
+    baseMargin: baseMargin * scaling,
+    incrementMargin: incrementMargin * scaling
+  };
 };
 
 HTMLActuator.prototype.updateScore = function (score) {
@@ -144,9 +275,9 @@ HTMLActuator.prototype.message = function (won) {
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
 
-  this.clearContainer(this.sharingContainer);
-  this.sharingContainer.appendChild(this.scoreTweetButton());
-  twttr.widgets.load();
+  //this.clearContainer(this.sharingContainer);
+  //this.sharingContainer.appendChild(this.scoreTweetButton());
+  //twttr.widgets.load();
 };
 
 HTMLActuator.prototype.clearMessage = function () {

@@ -1,7 +1,7 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 500px;
+$field-width: 1030px;
 $box-width: 250px;
 $grid-spacing: 15px;
 $grid-row-cells: 2;
@@ -172,6 +172,7 @@ hr {
 // Game field mixin used to render CSS at different width
 @mixin game-field {
   .game-container {
+    margin: auto;
     margin-top: 40px;
     position: relative;
     padding: $grid-spacing;
@@ -188,8 +189,7 @@ hr {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-
-    .game-message {
+    .game-message-wrapper {
       display: none;
 
       position: absolute;
@@ -201,13 +201,17 @@ hr {
       z-index: 100;
 
       text-align: center;
+      vertical-align:center;
 
+      .game-message {
+        display: table-cell;
+        vertical-align: middle;
+      }
       p {
         font-size: 60px;
         font-weight: bold;
         height: 60px;
         line-height: 60px;
-        margin-top: 222px;
         // height: $field-width;
         // line-height: $field-width;
       }
@@ -246,7 +250,7 @@ hr {
       }
 
       &.game-won, &.game-over {
-        display: block;
+        display: table;
       }
     }
   }
@@ -297,25 +301,11 @@ hr {
   }
 
   .tile {
-    &, .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
-      line-height: $tile-size + 10px;
-    }
-
-    // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
-        @for $z from 1 through $grid-row-cells {
-          @for $w from 1 through $grid-row-cells {
-            &.tile-position-#{$x}-#{$y}-#{$z}-#{$w} {
-              $xPos: floor(($tile-size + $grid-spacing) * ($x - 1) + $box-width * ($z - 1));
-              $yPos: floor(($tile-size + $grid-spacing) * ($y - 1) + $box-width * ($w - 1));
-              @include transform(translate($xPos, $yPos));
-            }
-          }
-        }
-      }
+    display: table;
+    &>.tile-inner {
+      display: table-cell;
+      vertical-align: middle;
+      padding-top:10px;
     }
   }
 }
@@ -333,8 +323,6 @@ hr {
     text-align: center;
     font-weight: bold;
     z-index: 10;
-
-    font-size: 55px;
   }
 
   // Movement transition
@@ -395,17 +383,17 @@ hr {
 
       // Adjust font size for bigger numbers
       @if $power >= 100 and $power < 1000 {
-        font-size: 45px;
+        font-size: 0.8em;
 
         // Media queries placed here to avoid carrying over the rest of the logic
         @include smaller($mobile-threshold) {
-          font-size: 25px;
+          font-size: 0.4em;
         }
       } @else if $power >= 1000 {
-        font-size: 35px;
+        font-size: 0.6em;
 
         @include smaller($mobile-threshold) {
-          font-size: 15px;
+          font-size: 0.25em;
         }
       }
     }
@@ -523,6 +511,7 @@ hr {
   @include game-field;
 
   .game-container {
+    margin: auto;
     margin-top: 20px;
   }
 

@@ -24,23 +24,20 @@ KeyboardInputManager.prototype.listen = function () {
   var self = this;
 
   var map = {
-    38: 0, // Up
-    39: 1, // Right
-    40: 2, // Down
-    37: 3, // Left
-    75: 0, // vim keybindings
-    76: 1,
-    74: 2,
-    72: 3,
-    87: 4, // W
-    68: 5, // D
-    83: 6, // S
-    65: 7  // A
+    38: [1, -1], // Up
+    39: [0, 1], // Right
+    40: [1, 1], // Down
+    37: [0, -1], // Left
+    87: [3, -1], // W
+    68: [2, 1], // D
+    83: [3, 1], // S
+    65: [2, -1]  // A
   };
 
   document.addEventListener("keydown", function (event) {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
                     event.shiftKey;
+    var shift = event.shiftKey;
     var mapped    = map[event.which];
 
     if (!modifiers) {
@@ -50,6 +47,12 @@ KeyboardInputManager.prototype.listen = function () {
       }
 
       if (event.which === 32) self.restart.bind(self)(event);
+    }
+    if (shift) {
+      if (mapped !== undefined) {
+        event.preventDefault();
+        self.emit('move', [mapped[0] + 4, mapped[1]]);
+      }
     }
   });
 
