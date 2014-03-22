@@ -2,6 +2,7 @@
 @import "fonts/clear-sans.css";
 
 $field-width: 1030px;
+$field-height: 400px;
 $box-width: 250px;
 $grid-spacing: 15px;
 $grid-row-cells: 2;
@@ -144,6 +145,7 @@ hr {
 
 .container {
   width: $field-width;
+  height: $field-height;
   margin: 0 auto;
 }
 
@@ -185,7 +187,7 @@ hr {
     background: $game-container-background;
     border-radius: $tile-border-radius * 2;
     width: $field-width;
-    height: $field-width;
+    height: $field-height;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -256,6 +258,8 @@ hr {
   }
 
   .grid-container {
+    width: 1000px;
+    height: 470px;
     position: absolute;
     z-index: 1;
   }
@@ -406,10 +410,10 @@ hr {
     color: $bright-text-color;
     background: mix(#333, $tile-gold-color, 95%);
 
-    font-size: 30px;
+    font-size: 0.5em;
 
     @include smaller($mobile-threshold) {
-      font-size: 10px;
+      font-size: 0.15em;
     }
   }
 }
@@ -648,3 +652,91 @@ hr {
     }
   }
 }
+
+.start-game-panel {
+  width: 100%;
+  height: 100%;
+  
+  &>p {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .custom-dimension-button {
+    cursor: pointer;
+    width: 400px;
+    height: 80px;
+    clear: both;
+    background-color: #fcff77;
+    border-radius: 8px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: auto;
+    font-size: 20px;
+
+    input {
+      font-size: 20px;
+      margin: 0px;
+    }
+    
+    &.button-selected {
+      background-color: lightgreen;
+    }
+  }
+
+  .start-game-button {
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+    clear: both;
+    background-color: #fcff77;
+    border-radius: 8px;
+    text-align: center;
+    padding-top: 23px;
+    margin: auto;
+    margin-top: 20px;
+    font-size: 30px;
+    
+    &:hover {
+      background-color: #f2b179
+    }
+  }
+  
+  .row-of-dimensions {
+    display: table;
+    clear: both;
+    margin: auto;
+    border-spacing: 10px;
+    
+    .dimension-button {
+      cursor: pointer;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      width: 120px;
+      height: 110px;
+      background-color: #fcff77;
+      border-radius: 8px;
+      
+      p {
+        margin: 0;
+      }
+      
+      p:first-child {
+        font-size: 30px;
+      }
+      p:last-child {
+        font-size: 15px;
+      }
+      
+      &.button-selected {
+        background-color: lightgreen;
+      }
+    }
+  }
+}
+
+

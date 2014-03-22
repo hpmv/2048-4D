@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>2048 4D</title>
+  <title>2048 ND</title>
 
   <link href="style/main.css" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="favicon.ico">
@@ -14,15 +14,15 @@
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
 
-  <meta property="og:title" content="2048 4D game"/>
-  <meta property="og:site_name" content="2048 4D game"/>
-  <meta property="og:description" content="Join the numbers and get to the 2048 tile in 4-dimensions! Careful: this game is extremely addictive!"/>
-  <meta property="og:image" content="http://huonw.github.io/2048-4D/meta/og_image.png"/>
+  <meta property="og:title" content="2048 ND game"/>
+  <meta property="og:site_name" content="2048 ND game"/>
+  <meta property="og:description" content="Play the 2048 game in ANY dimension you like!"/>
+  <meta property="og:image" content="http://hpmv.github.io/2048-4D/meta/og_image.png"/>
 </head>
 <body>
   <div class="container">
     <div class="heading">
-      <h1 class="title">2048 4D</h1>
+      <h1 class="title">2048 ND</h1>
       <div class="scores-container">
         <div class="score-container">0</div>
         <div class="best-container">0</div>
@@ -43,6 +43,48 @@
       </div>
 
       <div class="grid-container">
+        <div class="start-game-panel">
+          <p>Choose your game dimensions:</p>
+          <div class="row-of-dimensions">
+            <div class="dimension-button" onclick="chooseSize([4,4], this)">
+              <p>2D</p>
+              <p>4 x 4</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([5,5], this)">
+              <p>2D</p>
+              <p>5 x 5</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([3,3,3], this)">
+              <p>3D</p>
+              <p>3 x 3 x 3</p>
+            </div>
+            <div class="dimension-button button-selected" onclick="chooseSize([2,2,2,2], this)">
+              <p>4D</p>
+              <p>2 x 2 x 2 x 2</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([2,2,2,2,2], this)">
+              <p>5D</p>
+              <p>2 x 2 x 2 x 2 x 2</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([2,2,2,2,2,2], this)">
+              <p>6D</p>
+              <p>2 x 2 x ... x 2</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([2,2,2,2,2,2,2], this)">
+              <p>7D</p>
+              <p>2 x 2 x ... x 2</p>
+            </div>
+            <div class="dimension-button" onclick="chooseSize([2,2,2,2,2,2,2,2], this)">
+              <p>8D</p>
+              <p>2 x 2 x ... x 2</p>
+            </div>
+          </div>
+          <div class="custom-dimension-button" onclick="chooseSize(undefined, this)">
+            <p>Custom dimensions (ex. [2, 2, 2, 2]):</p>
+            <input id="custom-dimension-input" type="text"/>
+          </div>
+          <div class="start-game-button" onclick="startGame()">Start!</div>
+        </div>
       </div>
 
       <div class="tile-container">
@@ -51,11 +93,11 @@
     </div>
 
     <p class="game-explanation">
-      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> and <strong>WASD</strong>, or <strong>swipe</strong> with one and two fingers, to move the tiles in the 4 dimensions. When two tiles with the same number touch, they <strong>merge into one!</strong>
+      <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> for the first two dimensions, <strong>WASD</strong> for the third and fourth dimensions, and for higher dimensions, hold SHIFT to add four dimensions. When two tiles with the same number touch, they <strong>merge into one!</strong>
     </p>
     <hr>
     <p>
-    <strong class="important">Note:</strong> 2&times;2&times;2&times;2 4-dimensional version created by Huon Wilson.
+    <strong class="important">Note:</strong> N-dimensional version created by <a href="https://github.com/hpmv">Robin Cheng</a>, based on <a href="https://github.com/huonw">Huon Wilson's</a> 4-dimensional one.
     </p>
     <hr>
     <p>

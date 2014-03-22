@@ -117,6 +117,7 @@ hr {
 
 .container {
   width: 1030px;
+  height: 400px;
   margin: 0 auto; }
 
 @-webkit-keyframes fade-in {
@@ -149,7 +150,7 @@ hr {
   background: #bbada0;
   border-radius: 6px;
   width: 1030px;
-  height: 1030px;
+  height: 400px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
@@ -206,6 +207,8 @@ hr {
       display: table; }
 
 .grid-container {
+  width: 1000px;
+  height: 470px;
   position: absolute;
   z-index: 1; }
 
@@ -318,10 +321,10 @@ hr {
   .tile.tile-super .tile-inner {
     color: #f9f6f2;
     background: #3c3a32;
-    font-size: 30px; }
+    font-size: 0.5em; }
     @media screen and (max-width: 1050px) {
       .tile.tile-super .tile-inner {
-        font-size: 10px; } }
+        font-size: 0.15em; } }
 
 @-webkit-keyframes appear {
   0% {
@@ -470,7 +473,7 @@ hr {
     background: #bbada0;
     border-radius: 6px;
     width: 280px;
-    height: 280px;
+    height: 400px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box; }
@@ -527,6 +530,8 @@ hr {
         display: table; }
 
   .grid-container {
+    width: 1000px;
+    height: 470px;
     position: absolute;
     z-index: 1; }
 
@@ -672,3 +677,65 @@ hr {
         .btc-donate .address:after {
           left: 50%;
           bottom: 2px; } }
+
+.start-game-panel {
+  width: 100%;
+  height: 100%; }
+  .start-game-panel > p {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin: 0; }
+  .start-game-panel .custom-dimension-button {
+    cursor: pointer;
+    width: 400px;
+    height: 80px;
+    clear: both;
+    background-color: #fcff77;
+    border-radius: 8px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: auto;
+    font-size: 20px; }
+    .start-game-panel .custom-dimension-button input {
+      font-size: 20px;
+      margin: 0px; }
+    .start-game-panel .custom-dimension-button.button-selected {
+      background-color: lightgreen; }
+  .start-game-panel .start-game-button {
+    cursor: pointer;
+    width: 200px;
+    height: 50px;
+    clear: both;
+    background-color: #fcff77;
+    border-radius: 8px;
+    text-align: center;
+    padding-top: 23px;
+    margin: auto;
+    margin-top: 20px;
+    font-size: 30px; }
+    .start-game-panel .start-game-button:hover {
+      background-color: #f2b179; }
+  .start-game-panel .row-of-dimensions {
+    display: table;
+    clear: both;
+    margin: auto;
+    border-spacing: 10px; }
+    .start-game-panel .row-of-dimensions .dimension-button {
+      cursor: pointer;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      width: 120px;
+      height: 110px;
+      background-color: #fcff77;
+      border-radius: 8px; }
+      .start-game-panel .row-of-dimensions .dimension-button p {
+        margin: 0; }
+      .start-game-panel .row-of-dimensions .dimension-button p:first-child {
+        font-size: 30px; }
+      .start-game-panel .row-of-dimensions .dimension-button p:last-child {
+        font-size: 15px; }
+      .start-game-panel .row-of-dimensions .dimension-button.button-selected {
+        background-color: lightgreen; }

@@ -14,7 +14,7 @@ function HTMLActuator(size, grid) {
     maxHeight: 700,
     tileSize: 100,
     baseMargin: 15,
-    incrementMargin: 6
+    incrementMargin: 10
   };
   this.layout = this.calculateGridPositions(this.layoutParams);
 }
