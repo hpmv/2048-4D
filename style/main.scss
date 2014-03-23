@@ -6,7 +6,7 @@ $field-height: 400px;
 $box-width: 250px;
 $grid-spacing: 15px;
 $grid-row-cells: 2;
-$tile-size: ($box-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+$tile-size: 100px;
 $tile-border-radius: 3px;
 
 $mobile-threshold: $field-width + 20px;
@@ -327,6 +327,7 @@ hr {
     text-align: center;
     font-weight: bold;
     z-index: 10;
+    font-size: 55px;
   }
 
   // Movement transition
@@ -387,17 +388,17 @@ hr {
 
       // Adjust font size for bigger numbers
       @if $power >= 100 and $power < 1000 {
-        font-size: 0.8em;
+        font-size: 45px;
 
         // Media queries placed here to avoid carrying over the rest of the logic
         @include smaller($mobile-threshold) {
-          font-size: 0.4em;
+          font-size: 25px;
         }
       } @else if $power >= 1000 {
-        font-size: 0.6em;
+        font-size: 35px;
 
         @include smaller($mobile-threshold) {
-          font-size: 0.25em;
+          font-size: 15px;
         }
       }
     }
@@ -410,10 +411,10 @@ hr {
     color: $bright-text-color;
     background: mix(#333, $tile-gold-color, 95%);
 
-    font-size: 0.5em;
+    font-size: 30px;
 
     @include smaller($mobile-threshold) {
-      font-size: 0.15em;
+      font-size: 10px;
     }
   }
 }

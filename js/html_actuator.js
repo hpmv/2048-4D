@@ -23,13 +23,21 @@ HTMLActuator.prototype.actuate = function (metadata) {
   window.requestAnimationFrame(function () {
     this.clearContainer(this.gridContainer);
     this.clearContainer(this.tileContainer);
-    $(this.gridContainer).css({
+    var gridTileCss = {
       width: this.layout.gridWidth + 'px',
-      height: this.layout.gridHeight + 'px'
-    });
+      height: this.layout.gridHeight + 'px',
+      'transform-origin': '0 0',
+      '-moz-transform-origin': '0 0',
+      '-webkit-transform-origin': '0 0',
+      'transform': 'scale(' + this.layout.scaling + ')',
+      '-moz-transform': 'scale(' + this.layout.scaling + ')',
+      '-webkit-transform': 'scale(' + this.layout.scaling + ')'
+    };
+    $(this.gridContainer).css(gridTileCss);
+    $(this.tileContainer).css(gridTileCss);
     $('.game-container').css({
-      width: this.layout.gridWidth + 30 + 'px',
-      height: this.layout.gridHeight + 30 + 'px'
+      width: this.layout.containerWidth + 30 + 'px',
+      height: this.layout.containerHeight + 30 + 'px'
     });
     $('.game-message-wrapper').css({
       width: this.layout.gridWidth + 30 + 'px',
@@ -126,7 +134,6 @@ HTMLActuator.prototype.applyTransform = function (tile, position) {
   $(tile).css({
     width: this.layout.tileSize,
     height: this.layout.tileSize,
-    'font-size': 55 * this.layout.scaling + 'px',
     'transform': str,
     '-moz-transform': str,
     '-webkit-transform': str
@@ -228,18 +235,18 @@ HTMLActuator.prototype.calculateGridPositions = function (layoutParams) {
         y += (verticalSizes[(dim - 1) / 2] + baseMargin + (dim - 1) / 2 * incrementMargin) * position[dim];
       }
     }
-    x *= scaling;
-    y *= scaling;
     positions.push([x, y]);
   }
   return {
     scaling: scaling,
-    gridWidth: horizontal * scaling,
-    gridHeight: vertical * scaling,
-    tileSize: tileSize * scaling,
+    gridWidth: horizontal,
+    gridHeight: vertical,
+    containerWidth: horizontal * scaling,
+    containerHeight: vertical * scaling,
+    tileSize: tileSize,
     positions: positions,
-    baseMargin: baseMargin * scaling,
-    incrementMargin: incrementMargin * scaling
+    baseMargin: baseMargin,
+    incrementMargin: incrementMargin
   };
 };
 
